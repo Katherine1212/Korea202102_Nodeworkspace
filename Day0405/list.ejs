@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF_8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #ddd;
+}
+
+th, td {
+  text-align: left;
+  padding: 16px;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+</style>
+</head>
+<body>
+
+<h2> <%= "총 회원 수는 "+members.length%> </h2>
+
+<table>
+  <tr>
+    <th>Member_ID</th>
+    <th>회원 ID</th>
+    <th>비밀번호</th>
+    <th>이름</th>
+    <th>가입일</th>
+  </tr>
+  <!-- HTML Body 내에서 반복문 돌리고 싶을 때
+  1. 확장자를 ejs로 바꿈
+  2. <% %> 내부에 원하는 문법 작성 
+
+  <%= "문서에 문자열 출력" %>
+
+  서버는 파일의 확장자가 ejs인 경우, html 처럼 단순히 읽은 후 전송만 하는게 아니다.
+  즉, 확장자 ejs인 경우엔 퍼센트로 감싼 영역에 대해서는 해석 및 실행까지 해버린다.
+  따라서 %영역은 서버측의 스크립트 언어로 볼 수 있다.
+  script tag 안에 Javascript는 -->
+  
+  <% for(var i=0; i<members.length; i++){ %>
+  <% var obj=members[i]; %>  <!-- 배열에서 i번쨰 요소를 끄집어내서 회원 1명을 반환 -->
+  <tr>
+    <td> <%=obj.member_id%> </td>
+    <td> <%=obj.user_id%> </td>
+    <td> <%=obj.user_pass%> </td>
+    <td> <%=obj.user_name%> </td>
+    <td> <%=obj.regdate%> </td>
+  </tr>
+  <% } %>
+</table>
+
+</body>
+</html>

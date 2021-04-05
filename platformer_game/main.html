@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Platformer Game</title>
+<style>
+    body{margin: 0px;}
+    #wrapper{
+        width: 1280px;
+        height: 900px;
+        background-image: url(./Image/BG.png);
+        position: relative;
+        margin: auto;
+    }
+</style>
+<script src="./JS/GameObject.js"></script>
+<script src="./JS/Block.js"></script>
+<script src="./JS/Hero.js"></script>
+<script src="./JS/Library.js"></script>
+<script>
+    var wrapper;
+    var hero;
+    var blockArray=[];
+    function init(){
+        wrapper=document.getElementById("wrapper");
+
+        createBlock();
+        createHero();
+
+        // 키보드 이벤트 구현
+        window.addEventListener("keydown",function(e){ // e는 이벤트 객체
+
+            switch(e.keyCode){
+                case 32:jump();break;
+                case 37:hero.velX=-3;break;
+                case 39:hero.velX=3;break;
+            }
+
+        });
+         window.addEventListener("keyup",function(e){ // e는 이벤트 객체
+
+            switch(e.keyCode){
+                case 32:jump();break;
+                case 37:hero.velX=0;break;
+                case 39:hero.velX=0;break;
+            }
+
+        });
+    }
+    // 블럭 생성
+    function createBlock(){
+        // constructor(container,width,height,x,y)
+        for(var i=0; i<10; i++){
+            var block= new Block(wrapper,"./Image/Objects/StoneBlock.png",70,70,50+(70*i),600,0,0);
+            blockArray.push(block);
+        }
+    }
+    // 히어로 생성
+    function createHero(){
+        hero= new Hero(wrapper,"./Image/ninja.png",70,80,50,50,0,1);
+    }
+    // Keydown 관련 처리
+    function jump(){ //--- 점프 처리
+        if(hero.jump==false && hero.velY==0){ // 점프하지 않은 상황&& 벽돌에 서있을 때
+            hero.velY=-10; // 순간적으로 음수전환(하지만 g;중력때문에 다시 양수로 전환)
+            hero.jump=true; // 블럭 위에서 묶여있지 않도록 처리
+        };
+    }
+  
+    // 히어로 등장(낙하로)
+    function gameLoop(){
+        hero.tick();
+        hero.render();
+    }
+    window.addEventListener("load",function(){
+        init();
+        setInterval("gameLoop(),10");
+    });
+</script>
+</head>
+<body>
+    <div id="wrapper"></div>
+</body>
+</html>
