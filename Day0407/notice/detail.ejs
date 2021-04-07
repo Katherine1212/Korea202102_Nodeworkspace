@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- favicon -->
+<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon"> 
+<title>Registration</title>
+<style>
+    body {font-family: Arial, Helvetica, sans-serif;}
+    * {box-sizing: border-box;}
+    
+    input[type=text],textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-top: 6px;
+        margin-bottom: 16px;
+        resize: vertical;
+    }
+    textarea{
+        height: 100px;
+    }
+    input[type=submit], input[type=button] {
+        background-color: #4CAF50;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    input[type=submit], input[type=button]:hover {
+        background-color: #45a049;
+    }
+    
+    .container {
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 20px;
+    }
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+<script>
+    /*Jquery의 문법 형식은 $("누구를").어떻게 
+    누구를 자리에 올 수 있는 요소는 셀렉터 
+    
+    window addEventLister 대신에 $("window").ready 쓰지만 이걸 줄여서 $(fuction(){}); 익명함수 사용*/
+    $(function(){ // onload 시
+        // 편집기 입히기
+        CKEDITOR.replace('content');
+
+        $($("input[type='button']")[0]).click(function(){ // 등록 버튼
+            regist();
+        });
+
+        $($("input[type='button']")[1]).click(function(){ // 등록 버튼
+            getList();
+        });
+        $($("input[type='button']")[2]).click(function(){ // 등록 버튼
+            edit();
+        });
+        $($("input[type='button']")[3]).click(function(){ // 등록 버튼
+            del();
+        });
+
+    });
+    function regist(){ // 등록
+        // 전송준비 (url은 개발자가 정한다. 단, 서버에 짝을 맞추기)
+        $("form").attr("action","/notice/regist");
+        $("form").attr("method","post");
+        // 전송
+        $("form").submit(); 
+    }
+    function getList(){ // 목록
+        location.href="/notice/list";
+    }
+    function edit(){ // 수정
+        if(confirm("해당 내용으로 수정하시겠습니까?")){
+            $("form").attr({
+                action:"/notice/edit",
+                method:"post"
+            });
+            // 전송
+            $("form").submit(); 
+        }
+    }
+    function del(){ // 삭제
+
+    }
+</script>
+</head>
+<body>
+    
+    <h3>Contact Form</h3>
+    
+    <div class="container">
+        <!-- 
+            ID와 Name의 공통점과 차이점
+            공통점: 문서 내 요소 식별
+            차이점:
+            ID- 유일
+            Name- 중복허용(배열로 인식), form 전송 시 전송 파라미터 역할(변수역할)
+            전송 파라미터로서 Name의 이름은 주로, DB table 의 colum명과 일치 시키는 규칙이 있다.
+         -->
+        <form>
+        <input type="hidden" name="notice_id" value="<%=record.notice_id%>" ></input>
+        <input type="text" name="title" value="<%=record.title%>">
+        <input type="text" name="writer" value="<%=record.writer%>">
+        <textarea name="content"><%=record.content%></textarea>
+        
+        <!-- input type="submit"은 디폴트로 전송 기능이 포함. 클릭만으로도 전송발생
+        무조건 전송되므로 일반 버튼화 시키기.-->
+        <input type="button" value="Submit">
+        <input type="button" value="List">
+        <input type="button" value="Edit">
+        <input type="button" value="Delet">
+        </form>
+    </div>
+</body>
+</html>
