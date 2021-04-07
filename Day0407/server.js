@@ -144,6 +144,25 @@ app.post("/notice/edit",function(request,response){
     });
     
 });
+// 삭제 요청 처리(삭제는 get/post 둘 다 상관 없음.) 
+app.post("/notice/del",function(request,response){ // 이미 form tag내 hidden으로 존재하니 통째로 삭제->포스트
+    // 파라미터
+    var notice_id=request.body.notice_id;
+    console.log(notice_id);
+    // 삭제 sql문
+    var sql="delete from notice where notice_id=?";
+ 
+    var con=mysql.createConnection(conStr)
+    con.query(sql,[notice_id],function(err,fields){
+        if(err){
+            console.log(err);
+        }else{
+            response.writeHead(200,{"Content-Type":"text/html;charset=utf-8"});
+            response.end(mymodule.getMsgUrl("삭제 완료.","/notice/list"));
+        }
+        con.end();
+    });
+});
 // express 모듈 통해 객체 생성
 var server=http.createServer(app); // http서버에 express 모듈 적용
 server.listen(8989,function(){

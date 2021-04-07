@@ -20,6 +20,17 @@ tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 </style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  // 버튼 클릭시, /member/list 페이지 요청
+  $(function(){
+    $("button").on("click",function(){ // .on(클릭, 마우스 등 이벤트 사용가능)
+      location.href="/member/form";
+    }); 
+
+  });
+
+</script>
 </head>
 <body>
 
@@ -54,6 +65,11 @@ tr:nth-child(even) {
     <td> <%=obj.regdate%> </td>
   </tr>
   <% } %>
+  <tr>
+    <td colspan="5">
+      <button>가입</button>
+    </td>
+  </tr>
 </table>
 
 </body>

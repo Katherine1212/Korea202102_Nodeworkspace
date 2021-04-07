@@ -90,7 +90,14 @@
         }
     }
     function del(){ // 삭제
-
+        if(confirm('해당회원을 삭제 하시겠습니까?')){
+            $("form").attr({
+                action:"/notice/del",
+                method:"post"
+            });
+            // 전송
+            $("form").submit(); 
+        }
     }
 </script>
 </head>

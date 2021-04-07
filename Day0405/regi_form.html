@@ -60,6 +60,11 @@
             $("form").attr("method","post"); // 전송방식을 post로 변경
             $("form").submit(); // form 양식에 입력한 데이터를 서버로 전송
         });
+        // 두번쟤 버튼 누르면 목록 요청
+        $($("input[type=button]")[1]).click(function(){
+            location.href="/member/list"; // get 방식 요청
+        });
+
     });
 </script>
 </head>
@@ -88,6 +93,7 @@
         <!-- input type="submit"은 디폴트로 전송 기능이 포함. 클릭만으로도 전송발생
         무조건 전송되므로 일반 버튼화 시키기.-->
         <input type="button" value="Submit">
+        <input type="button" value="목록으로">
         </form>
     </div>
 </body>
