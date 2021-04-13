@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- favicon -->
+<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon"> 
+<title>Registration</title>
+<style>
+    body {font-family: Arial, Helvetica, sans-serif;}
+    * {box-sizing: border-box;}
+    
+    input[type=text],textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-top: 6px;
+        margin-bottom: 16px;
+        resize: vertical;
+    }
+    textarea{
+        height: 100px;
+    }
+    input[type=submit], input[type=button] {
+        background-color: #4CAF50;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    input[type=submit], input[type=button]:hover {
+        background-color: #45a049;
+    }
+    
+    .container {
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        padding: 20px;
+    }
+    .comment-list div{
+        display: inline-block; /* block속성 유지하되 수평으로 공존가능 */
+        border: 1px solid lightgrey;
+    }
+
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+<script src="/js/comments.js"></script>
+<script>
+    $(function(){ //onLoad되면....
+        CKEDITOR.replace("content");
+        $($("input[type='button']")[0]).click(function(){ //등록버튼
+            edit();
+        });
+        $($("input[type='button']")[1]).click(function(){ //목록버튼
+            getList();
+        });
+    });
+    function edit(){
+        $("form").attr("action","/news/edit");  //url 은 개발자가 정한다, 단 서버랑 짝을 맞추자!!
+        $("form").attr("method","post");  
+        $("form").submit();//전송행위가 발생!!!
+    }
+    function getList(){
+        location.href="/news/list";
+    }
+
+    function addComment(){ // 댓글 등록요청
+        /* [동기방식]
+        $(".comment-form").attr({
+            method:"post",
+            action:"/comments/regist"
+        });
+        $(".comment-form").submit(); 
+        */
+
+        // [비동기 방식] 화면의 일부 변경위해 백그라운드에서 요청 시도
+        var xhttp = new XMLHttpRequest(); // 비동기 객체 생성
+        // 이벤트 처리
+        xhttp.onreadystatechange = function() {
+            // 응답을 받되, 요청 처리가 성공된 경우에만
+            if(this.readyState==4 && this.status==200) {
+               // document.getElementById("box").innerHTML= this.responseText;
+                // alert("서버로부터 받은 결과는"+this.responseText);
+            
+                // resonseTect 를 분석하여 성공실패여부 판단
+                var json= JSON.parse(this.responseText); // "" 걷어내고 json객체 반환
+                if(json.result==0){ // 실패
+                    alert("등록실패");
+                }else{ // 성공
+                    // 댓글 불러오기
+                    alert("댓글 등록 성공");
+                    /* [동기]
+                    새로고침
+                    location.reload();
+                    location.href="/news/detail?news_id=<%=news[0]%>"
+                    */
+                   // [비동기]
+                   getCommentList();
+                }
+            }
+        };
+
+        xhttp.open("POST", "/comments/regist", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        
+        var msg=$("input[name='msg']").val(); // 댓글 내용
+        var author=$("input[name='author']").val(); // 댓글 작성자
+        xhttp.send("news_id=<%=news[0]%>&msg="+msg+"&author="+author);
+    }
+    function getCommentList(){
+        var xhttp= new XMLHttpRequest();
+        // 메인 실행부는 이벤트 함수를 통해 비동기 방식으로 요청처리
+        xhttp.onreadystatechange=function(){
+            // 서버가 무사히 처리 했고, 응답이 왔다면
+            if(this.readyState==4 && this.status==200){
+              // 서버가 json문자열로 전송했기때문에 다시 json으로 복원
+              var json= JSON.parse(this.responseText);
+              // 서버로부터 받은 데이터를 화면에 갱신.(개발자는 DOM지식 필요)
+              printCommentsList(json.rows);
+            }
+        }
+        xhttp.open("GET","/comments/list?news_id=<%=news[0]%>",true);
+        xhttp.send();
+    }
+    // 댓글 출력
+    function printCommentsList(arr){
+        // 출력 전 기존에 등록된 댓글 전부 삭제.(그 이후에 반복문 돌리는 것이 빠름)
+        $("#comments_wrapper").html(""); // innerHTML="" 과 동일
+        console.log(arr);
+        for(var i=0; i<arr.length; i++){
+            var msg=arr[i][2]; // 메세지
+            var author=arr[i][3]; // 작성자
+            var writeDay=arr[i][4].substring(0,10); // 등록일
+            var c= new Comments(document.getElementById("comments_wrapper"),msg, author, writeDay);
+
+        }
+    }
+</script>
+</head>
+<body>
+    
+    <h3>Contact Form</h3>
+    
+    <div class="container">
+        <form id="detail-form">
+        <input type= "text" name= "title" value= "<%=news[1]%>">
+        <input type= "text" name= "writer" value= "<%=news[2]%>">
+        <textarea name= "content" placeholder= "내용을 입력하십시오."><%=news[3]%></textarea>
+        <!-- input type="submit"은 디폴트로 전송 기능이 포함. 클릭만으로도 전송발생
+        무조건 전송되므로 일반 버튼화 시키기.-->
+        <input type= "button" value= "등록">
+        <input type= "button" value= "목록">
+
+        <!-- 댓글 등록 및 목록 -->
+        </form>
+        <form class="comment-form">
+            <!-- 어떤 뉴스 기사의 댓글인지  -->
+            <input type="hidden" name="news_id" value="<%=news[0]%>">
+            
+            <input type="text" name="msg" placeholder="댓글 내용" style="width: 65%;">
+            <input type="text" name="author" placeholder="작성자" style="width: 20%;">
+            <input type="button" onclick="addComment()" value="댓글 등록" style="width: 10%;">
+        </form>
+
+        <div id="comments_wrapper">
+            <%for(var i=0; i<commentsList.length; i++){%>
+                <% var comments= commentsList[i]%>
+            <div class="comment-list">
+                <div style="width: 65%;"><%=comments[2]%></div>
+                <div style="width: 20%;"><%=comments[3]%></div>
+                <%
+                var d= new Date(comments[4]);
+                var yy= d.getFullYear();
+                var mm=lib.getZeroString(d.getMonth()+1);
+                var dd=lib.getZeroString(d.getDate());
+                %>
+                <div style="width: 10%;"><%=yy%>-<%=mm%>-<%=dd%></div>
+            </div>
+            <%}%>
+        </div>
+
+    </div>
+</body>
+</html>
