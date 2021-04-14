@@ -1,0 +1,353 @@
+SQL> -- 사용자가 기억이 안 날 경우-> dictionary 확인해보자
+SQL> -- 수백여가지의 딕셔너리중 어떤 시스템 테이블을 조회?-> user_시작하는 테이블
+SQL> -- 형재 사용자가 system 이므로 dba_로 시작하는 테이블로 조회.
+SQL> desc dba_users;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ USERNAME                                  NOT NULL VARCHAR2(30)
+ USER_ID                                   NOT NULL NUMBER
+ PASSWORD                                           VARCHAR2(30)
+ ACCOUNT_STATUS                            NOT NULL VARCHAR2(32)
+ LOCK_DATE                                          DATE
+ EXPIRY_DATE                                        DATE
+ DEFAULT_TABLESPACE                        NOT NULL VARCHAR2(30)
+ TEMPORARY_TABLESPACE                      NOT NULL VARCHAR2(30)
+ CREATED                                   NOT NULL DATE
+ PROFILE                                   NOT NULL VARCHAR2(30)
+ INITIAL_RSRC_CONSUMER_GROUP                        VARCHAR2(30)
+ EXTERNAL_NAME                                      VARCHAR2(4000)
+ PASSWORD_VERSIONS                                  VARCHAR2(8)
+ EDITIONS_ENABLED                                   VARCHAR2(1)
+ AUTHENTICATION_TYPE                                VARCHAR2(8)
+
+SQL> select username form dba_users;
+select username form dba_users
+                     *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> select username from dba_users;
+
+USERNAME                                                                        
+------------------------------------------------------------                    
+NODE                                                                            
+FRONT                                                                           
+HR                                                                              
+ANONYMOUS                                                                       
+FLOWS_FILES                                                                     
+APEX_040000                                                                     
+MDSYS                                                                           
+CTXSYS                                                                          
+DBSNMP                                                                          
+XDB                                                                             
+APPQOSSYS                                                                       
+
+USERNAME                                                                        
+------------------------------------------------------------                    
+SYS                                                                             
+SYSTEM                                                                          
+APEX_PUBLIC_USER                                                                
+OUTLN                                                                           
+DIP                                                                             
+ORACLE_OCM                                                                      
+XS$NULL                                                                         
+
+18 rows selected.
+
+SQL> -- node 사용자 계정으로 접속
+SQL> conn node/node
+Connected.
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create table notice(
+  2    notice_id number primary key
+  3    ,title varchar(100)
+  4    ,write varchar(20)
+  5    ,content clob
+  6    ,regdate date default sysdate
+  7    ,hot number default 0
+  8* )
+SQL> ;
+  1  create table notice(
+  2    notice_id number primary key
+  3    ,title varchar(100)
+  4    ,write varchar(20)
+  5    ,content clob
+  6    ,regdate date default sysdate
+  7    ,hot number default 0
+  8* )
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create table notice(
+  2    notice_id number primary key
+  3    ,title varchar(100)
+  4    ,write varchar(20)
+  5    ,content clob
+  6    ,regdate date default sysdate
+  7    ,hot number default 0
+  8* );
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create table notice(
+  2    notice_id number primary key
+  3    ,title varchar(100)
+  4    ,write varchar(20)
+  5    ,content clob
+  6    ,regdate date default sysdate
+  7    ,hot number default 0
+  8* )
+SQL> /
+
+Table created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create table comments(
+  2    comments_id number primary key
+  3    ,news_id number
+  4    ,msg varchar(100)
+  5    ,author varchar(20)
+  6    ,writeday date default sysdate
+  7    ,constraint fk_newscomments foreign key(news_id) references news(news_id)
+  8* )
+SQL> /
+  ,constraint fk_newscomments foreign key(news_id) references news(news_id)
+                                                              *
+ERROR at line 7:
+ORA-00942: table or view does not exist 
+
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create table comments(
+  2    comments_id number primary key
+  3    ,news_id number
+  4    ,msg varchar(100)
+  5    ,author varchar(20)
+  6    ,writeday date default sysdate
+  7    ,constraint fk_newscomments foreign key(news_id) references news(news_id)
+  8* )
+SQL> /
+  ,constraint fk_newscomments foreign key(news_id) references news(news_id)
+                                                              *
+ERROR at line 7:
+ORA-00942: table or view does not exist 
+
+
+SQL> drop table notice;
+
+Table dropped.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create  table  news(
+  2     news_id  number  primary key 
+  3    , title varchar(100)
+  4    , writer varchar(20)
+  5    , content  clob 
+  6    , regdate  date default sysdate 
+  7    , hit number  default 0
+  8* )
+  9  /
+
+Table created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create  table  news(
+  2     news_id  number  primary key 
+  3    , title varchar(100)
+  4    , writer varchar(20)
+  5    , content  clob 
+  6    , regdate  date default sysdate 
+  7    , hit number  default 0
+  8* )
+SQL> ;
+  1  create  table  news(
+  2     news_id  number  primary key 
+  3    , title varchar(100)
+  4    , writer varchar(20)
+  5    , content  clob 
+  6    , regdate  date default sysdate 
+  7    , hit number  default 0
+  8* )
+SQL> ddddd/
+SP2-0042: unknown command "ddddd/" - rest of line ignored.
+SQL> select table_name from user)_tables;
+select table_name from user)_tables
+                       *
+ERROR at line 1:
+ORA-00903: invalid table name 
+
+
+SQL> select table_name from user_tables;
+
+TABLE_NAME                                                                      
+------------------------------------------------------------                    
+GALLERY                                                                         
+NEWS                                                                            
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create  table  comments(
+  2     comments_id  number  primary key 
+  3    , news_id  number
+  4    , msg  varchar(100)
+  5    , author  varchar(20)
+  6    , writeday  date  default sysdate 
+  7    , constraint  fk_newscomments  foreign key (news_id) references news(news_id)
+  8* )
+SQL> /
+
+Table created.
+
+SQL> select table_name from user_tables;
+
+TABLE_NAME                                                                      
+------------------------------------------------------------                    
+GALLERY                                                                         
+NEWS                                                                            
+COMMENTS                                                                        
+
+SQL> create sequence seq_comments
+  2  increment by 1
+  3  start with 1;
+
+Sequence created.
+
+SQL> create sequence seq_news
+  2  increment by 1
+  3  start with 1;
+
+Sequence created.
+
+SQL> -- 시퀀스 조회
+SQL> insert into news(news_id, title) values(seq_news.nextval, 'test');
+
+1 row created.
+
+SQL> select seq_news.currval from dual;
+
+   CURRVAL                                                                      
+----------                                                                      
+         1                                                                      
+
+SQL> desc dual;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DUMMY                                              VARCHAR2(1)
+
+SQL> -- 현재 세션에서 insert가 발생한 직후에 조회가 가능(select seq_news.currval from dual;)
+SQL> select * from news_id, title, news;
+select * from news_id, title, news
+                       *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> select news_id, title from news;
+
+   NEWS_ID                                                                      
+----------                                                                      
+TITLE                                                                           
+--------------------------------------------------------------------------------
+         1                                                                      
+test                                                                            
+                                                                                
+
+SQL> -- DML 확정 짓는 법 (디폴트는 false)
+SQL> select news_id, title from news;
+
+   NEWS_ID                                                                      
+----------                                                                      
+TITLE                                                                           
+--------------------------------------------------------------------------------
+         3                                                                      
+Mu                                                                              
+                                                                                
+         1                                                                      
+test                                                                            
+                                                                                
+
+SQL> select news_id, title from news;
+
+   NEWS_ID                                                                      
+----------                                                                      
+TITLE                                                                           
+--------------------------------------------------------------------------------
+         3                                                                      
+Mu                                                                              
+                                                                                
+         6                                                                      
+                                                                                
+                                                                                
+         1                                                                      
+test                                                                            
+                                                                                
+
+   NEWS_ID                                                                      
+----------                                                                      
+TITLE                                                                           
+--------------------------------------------------------------------------------
+         4                                                                      
+Muyaho                                                                          
+                                                                                
+         5                                                                      
+Muyaho                                                                          
+                                                                                
+
+SQL> delet from news;
+SP2-0734: unknown command beginning "delet from..." - rest of line ignored.
+SQL> delete from news;
+
+5 rows deleted.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> desc comments;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ COMMENTS_ID                               NOT NULL NUMBER
+ NEWS_ID                                            NUMBER
+ MSG                                                VARCHAR2(100)
+ AUTHOR                                             VARCHAR2(20)
+ WRITEDAY                                           DATE
+
+SQL> set line 300;
+SQL> select * from comments;
+
+no rows selected
+
+SQL> select * from comments;
+
+COMMENTS_ID    NEWS_ID MSG                                                                                                                                                                                                      AUTHOR                                   WRITEDAY                           
+----------- ---------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------------- --------                           
+          1          8 무                                                                                                                                                                                                       먀                                       21/04/12                           
+
+SQL> set line 300
+SQL> select * from comments;
+
+COMMENTS_ID    NEWS_ID MSG                                                                                                                                                                                                      AUTHOR                                   WRITEDAY                           
+----------- ---------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------------- --------                           
+          1          8 무                                                                                                                                                                                                       먀                                       21/04/12                           
+
+SQL> select * from comments;
+
+COMMENTS_ID    NEWS_ID MSG                                                                                                                                                                                                      AUTHOR                                   WRITEDAY                           
+----------- ---------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------------- --------                           
+          1          8 무                                                                                                                                                                                                       먀                                       21/04/12                           
+          2          9 ㅁ                                                                                                                                                                                                       ㅁ                                       21/04/12                           
+          3          9 비밀                                                                                                                                                                                                     이야                                     21/04/12                           
+
+SQL> exit
