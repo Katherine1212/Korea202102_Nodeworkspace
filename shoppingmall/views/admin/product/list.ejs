@@ -1,0 +1,87 @@
+<%  
+    // 총 레코드 수
+    var totalRecord=param.record.length;
+    // 페이지당 보여질 레코드 수
+    var pageSize=10;
+    // 총 페이지 수
+    var totalPage=Math.ceil(totalRecord/pageSize);
+    // 페이지 번호 묶음
+    var blockSize=10;
+    // 현재 페이지
+    var currentPage=param.currentPage;
+    // 페이지당 배열의 시작 인덱스
+    var curPos=(currentPage-1)*pageSize;
+    // 페이지당 시작번호
+    var num= totalRecord-curPos;
+
+
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/css/admin_topnavi.css">
+<style>
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+        border: 1px solid #ddd;
+    }
+
+    th, td {
+        text-align: left;
+        padding: 16px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    a{
+        /* 하이퍼링크 하단 밑줄제거 */
+        text-decoration: none;
+    }
+</style>
+</head>
+<body>
+    <!-- top navigation 자리 -->
+    <%- include ('../inc/topnavi')%>
+
+    <h2>Product List</h2>
+    <table>
+        <tr>
+            <th>No</th>
+            <th>Subcategory</th>
+            <th>Image</th>
+            <th>Product Name</th>
+            <th>Price</th>
+            <th>Brand</th>
+        </tr>
+        <%for(var i=1; i<=pageSize; i++){%>
+        <%if(num<1) break;%>
+        <%var product= param.record[curPos++]%>
+        <tr>
+            <td><%=(num--)%></td>
+            <td><%=product.sub_name%></td>
+            <td>
+                <img src="/product/<%=product.filename%>" alt="" width="50px">
+            </td>
+            <td><%=product.product_name%></td>
+            <td><%=product.price%></td>
+            <td><%=product.brans%></td>
+        </tr>
+        <%}%>
+        <tr>
+            <td colspan="6" style="text-align: center;">
+                <a href="/admin/product/list">◀</a>
+                <%for(var i=1; i<=blockSize; i++){%>
+                    <%if(i>totalPage)break;%>
+                    <a href="/admin/product/list?currentPage=<%=i%>">[<%=i%>]</a>
+                <%}%>
+                <a href="/admin/product/list">▶</a>
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>
