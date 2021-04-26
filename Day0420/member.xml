@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding=UTF-8?>
+<!-- XML은 HTML과 같은 부모(SGML)에서 대어난 태그를 사용할 수 있는 전자문서.
+하지만, HTML과 달리 대/소문자를 구분하는 아주 까다로운 문법 형식을 따라 작성.
+WHY? 데이터를 표현하기 위해!
+XML이란 텍스트 기반의 DB -->
+<members>
+  <member>
+    <Name>Batman</Name>
+    <age>37</age>
+  </member>
+  <p/>
+  <member>
+    <Name>Superman</Name>
+    <age>36</age>
+  </member>
+  <p/>
+  <member>
+    <Name>Antman</Name>
+    <age>37</age>
+  </member>
+</members>
+<!-- JSON
+{
+    "members":[
+        {
+            "name": Batman,
+            "Age": 37
+        },
+        {
+            "name": Superman,
+            "Age": 36
+        },
+        {
+            "name": Antman,
+            "Age": 37
+        }
+    ]
+
+}
+
+
+
+
+ -->
